@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Related Nodes module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_entity_presave().
+ */
+function related_news_entity_presave(EntityInterface $entity): void {
+  if (!($entity instanceof Node && $entity->bundle() === 'news_page')) {
+    return;
+  }
+  Cache::invalidateTags(['related_news_tag']);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function related_news_entity_delete(EntityInterface $entity): void {
+  if (!($entity instanceof Node && $entity->bundle() === 'news_page')) {
+    return;
+  }
+  Cache::invalidateTags(['related_news_tag']);
+}
